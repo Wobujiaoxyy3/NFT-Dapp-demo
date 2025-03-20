@@ -1,18 +1,19 @@
 import { parseEther } from "viem";
 import { Button, message } from "antd";
-import { mainnet, sepolia, polygon } from "wagmi/chains";
+import { mainnet, sepolia, polygon, hardhat } from "wagmi/chains";
 import { injected, walletConnect } from "wagmi/connectors";
 import { createConfig, http, useReadContract, useWriteContract, useWatchContractEvent } from "wagmi";
-import { Polygon, Sepolia, WagmiWeb3ConfigProvider, MetaMask } from '@ant-design/web3-wagmi';
+import { Hardhat, Polygon, Sepolia, WagmiWeb3ConfigProvider, MetaMask } from '@ant-design/web3-wagmi';
 import { Address, NFTCard, ConnectButton, Connector, useAccount, useProvider } from "@ant-design/web3";
 import { WalletNotSelectedError } from "@solana/wallet-adapter-react";
 
 const config = createConfig({
-    chains: [mainnet, sepolia, polygon],
+    chains: [mainnet, sepolia, polygon, hardhat],
     transports: {
         [mainnet.id]: http(),
         [sepolia.id]: http(),
         [polygon.id]: http(),
+        [hardhat.id]: http("http://127.0.0.1:8545/"),
     },
     connectors: [
         injected({
@@ -36,6 +37,11 @@ const contractInfo = [
         id:137,
         name: "Polygon",
         contractAddress: "0x418325c3979b7f8a17678ec2463a74355bdbe72c"
+    },
+    {
+        id:31337,
+        name: "Hardhat",
+        contractAddress: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
     }
 ]
 
@@ -137,7 +143,7 @@ export default function Web3() {
   return (
     <WagmiWeb3ConfigProvider
         config={config}
-        chains={[Sepolia, Polygon]}
+        chains={[Sepolia, Polygon, Hardhat]}
         wallets={[MetaMask()]}
         eip6963={{
             autoAddInjectedWallets: true,   // EIP6963 auto add injected wallets
